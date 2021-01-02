@@ -1,0 +1,48 @@
+;RUN CONTROL
+integrator               = md ; leap-frog integrator
+nsteps                   = 25000 ; steps
+dt                       = 0.002 ; (25000*0.002 ps = 50 ps)
+constraints		         = h-bonds ; convert bonds with H-atoms to constraints
+define                   = -DPOSRES ; positional restraint (check posre.itp)
+
+;OUT CONTROL
+nstxout                  = 500 ; save coordinates every 1 ps
+nstvout                  = 500 ; save velocities every 1 ps
+nstxtcout                = 500 ; save compressed coordinates every 1 ps
+nstlog                   = 500 ; update log every 1 ps
+
+;NEIGHBOUR SEARCHING-ELECTROSTATICS
+coulombtype              = pme ; Particle Mesh Ewald for long-range electrostatics
+coulomb-modifier         = Potential-shift-Verlet
+rcoulomb-switch          = 0
+epsilon-r                = 1
+epsilon_rf               = 1
+vdw-type                 = cut-off
+vdw-modifier             = Potential-switch
+rvdw-switch              = 1.0
+rvdw                     = 1.2 ; short-range van der Waals cutoff (in nm)
+cutoff-scheme            = Verlet ; Buffered neighbor searching
+ns_type                  = grid ; defines a grid for neighbour list finding
+nstlist                  = 10 ; Frequency to update the neighbor list
+rlist                    = 1.0 ; Cut-off distance for the short-range neighbor list (in nm)
+rcoulomb                 = 1.2 ; short-range electrostatic cutoff (in nm)
+optimize_fft             = yes ; Calculate the optimal FFT plan for the grid at startup
+fourierspacing           = 0.15 ; grid spacing for FFT
+
+;TEMPERATURE COUPLING
+tcoupl                   = v-rescale ; modified Berendsen thermostat
+tc_grps                  = Membrane Water ; two coupling groups
+tau_t                    = 0.1 0.1 ; time constant, in ps
+ref_t                    = 300 300 ; reference temperature, one for each group, in K
+
+;PRESSURE COUPLING
+Pcoupl			         = Berendsen ; Berendsen thermostat
+Pcoupltype               = Semi-isotropic ; Pressure coupling which is isotropic in the x and y direction, but different in the z direction
+refcoord-scaling         = com ; Scale the center of mass of the reference coordinates with the scaling matrix of the pressure coupling
+pbc 			         = xyz ; periodic boundary conditions in all directions
+tau_p                    = 1.0 ; time constant for pressure coupling, in ps
+compressibility          = 5e-5 5e-5 5e-5 0. 0. 0. ; in bar^-1
+ref_p                    = 1. 1. 1. 0. 0. 0. ; reference pressure for coupling, in bar
+
+;VELOCITY GENERATION
+gen_vel                  = no ; assign velocities from Maxwell distribution

@@ -1,0 +1,11 @@
+source leaprc.protein.ff14SB 
+source leaprc.lipid14 
+source leaprc.water.tip3p 
+source leaprc.gaff2 
+set default pbradii mbondi2 
+set default reorder_residues off 
+system = loadpdb bilayer_only.pdb 
+setbox system vdw 0 
+savepdb  system  system.pdb 
+saveamberparm system system.prmtop system.inpcrd
+quit
