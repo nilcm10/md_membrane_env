@@ -10,7 +10,6 @@ This part of the protocol will be done under `just_popc/`:
 $ cd just_popc
 ```
 
-
 #### Membrane creation with [packmol-memgen](https://pubs.acs.org/doi/10.1021/acs.jcim.9b00269)
 
 First, we're going to create a membrane with just POPC. With the following command, we're defining a 75x75 A membrane.
@@ -137,6 +136,12 @@ And, just like before, the APL per leaflet, for the whole membrane, and a plot o
 
 ### POPC+CHL
 
+This part of the protocol will be done under `popc+chl/`:
+
+```
+$ cd ../popc+chl
+```
+
 Now we're going to simulate a membrane with a ratio of 1 cholesterol molecule per 3 of POPC. Create the membrane with packmol-memgen to begin with:
 
 ```
@@ -145,10 +150,55 @@ $ packmol-memgen --lipids POPC:CHL --ratio 3:1 --distxy_fix 75
 
 Repeat the previous steps to obtain a short simulation of the system.
 
+### Comparative analysis
+
+So, if we compare the membrane thickness and the APL on the previous simulations (*just_popc* and *popc+chl*), we really can't see a significant difference.
+
+Try the analysis again but with longer simulations (100 times longer, i.e. 100 ns), to check for these two quantities. The files can be accessed through... 
+
 ## Protein-Membrane system
 
-
-
-```
+This part of the protocol will be done under `membrane_protein/`:
 
 ```
+$ cd ../membrane_protein
+```
+
+### Building the system
+
+In here we're going to create a bilayer for a membrane protein. Run the following command:
+
+```
+$ packmol-memgen --pdb protein.pdb --lipids POPC:CHL1 --ratio 10:1 \
+    --dist 12 --dist_wat 15 --salt --salt_c Na+
+```
+
+What we're doing now is building a bilayer for our protein, 12 A to the edges of the box in the X and Y axis, 15 A in the Z axis, and with a concentration of salt of 0.15 M (need to specify the cation).
+
+Check the output .PDB with vmd:
+
+```
+$ vmd bilayer_protein.pdb
+```
+
+We're not gonna go over again the steps we followed before because it's probably gonna take a long while. So we're going to go straight to the analysis part. 
+
+### Analysis
+
+In this link a 100 ns trajectory of a system (similar) to the one you've created. That is a CB2 receptor embedded in a 10:1 POPC:CHL membrane, with 0.15 M NaCl. We're going to proceed now to the analysis of some variables concerning the membrane protein.
+
+#### RMSD
+
+We're gonna first measure the RMSD of the C-alpha atoms of our receptor along the trajectory. This can be done with GROMACS:
+
+```
+$ gmx rms ..
+```
+
+...
+
+#### RMSF
+
+#### Secondary Structure analysis
+
+
