@@ -34,13 +34,22 @@ $ vmd bilayer_only.pdb
 In this part, we're going to obtain the amber ff parameters (version 14SB) for the system:
 
 ```
+$ cp ../files/leap.in .
 $ tleap -f leap.in
 $ acpype.py -x system.inpcrd -p system.prmtop -o gmx -r
 ```
 
 With `leap` we process the system (from the output pdb file) and obtain the parameters for [AMBER](http://ambermd.org/) (.PRMTOP and .INPCRD). However, we're simulating it with [GROMACS](https://manual.gromacs.org/), so we need to transform them to a .TOP and .GRO files, by means of `acpype.py`.
 
-#### Preparation (energy minimization + equilibration)
+#### Preparation
+
+Copy the "molecular dynamics parameters" files for the following part:
+
+```
+$ cp -r ../files/mdp .
+```
+
+##### Energy minimization
 
 Once we have the necessary files for a simulation with GROMACS, we're going to continue with a short minimization (1000 steps). Open the file `mdp/min.mdp` to check what we're doing first.
 
@@ -53,9 +62,42 @@ $ gmx mdrun -deffnm system_min -v
 
 With the first command we generate the mdrun input file (.TPR), and with the second we perform the actual calculation. Once it's done, we need to equilibrate the system.
 
-We're going to perform a **three step equilibration** of our system ona a NPT ensemble. Run the following command:
+##### Equilibration
+
+We're going to perform a **three step equilibration** of our system ona a NPT ensemble. 
+
+Before doing that, we need to add these three lines before the section (i. e. fractions of text/syntax between in brackets in GROMACS files):
 
 ```
+...
+
+[ molecule type ]
+;molname    nrexcl
+WAT         2
+
+...
+```
+
+To make it look like this:
+
+```
+...
+
+#ifdef POSRES
+#include "posre.itp"
+#endif
+
+[ molecule type ]
+;molname    nrexcl
+WAT         2
+
+...
+```
+
+Run the following command:
+
+```
+$ chmod +x equi.sh
 $ ./equi.sh
 ```
 
@@ -63,9 +105,9 @@ And now check the three equilibration files in the `mdp/` folder (`equi*.mdp`). 
 
 > HINT: you can use `vimdiff` followed by the files to compare them to spot the differences more easily.
 
-Also, check the script we're executing, and figure out what are the `gmx genrestr` and `gmx make_ndx` commands doing. 
+Also, check the script we're executing, and figure out what are the `gmx genrestr` and `gmx make_ndx` commands doing.
 
-The whole equilibration will probably take a while.
+The whole equilibration will probably take a long while (almost 1 hour).
 
 Once the first equilibration is done (equi1), visualize the time-evolution of the trajectory, with vmd:
 
@@ -87,13 +129,12 @@ And then, we will pick the variables we want to assess by typing the following n
 
 This way we're selecting the **total energy of the system**, **temperature**, **pressure**, **density** and **volume**. The final zero exits the prompt.
 
-To visualize the file you can either use `xmgrace` or execute the following python script (<span style="color:red">you need to have *pandas* and *matplotlib* installed</span>):
+To visualize the file you can either use `xmgrace` or execute the following python script:
 
 ```
-$ python plot_xvg.py equi1.xvg
+$ python ../files/plot_xvg.py equi1.xvg
 ```
-
-See how the different variables change along time until stabilized.
+It outputs a PNG image on the same location where the .XVG file is. See how the different variables change along time until stabilized.
 
 #### Production
 
@@ -104,15 +145,17 @@ $ gmx grompp -f mdp/prod.mdp -r system_equi3.gro -c system_equi3.gro -p system_G
 $ gmx mdrun -deffnm system_prod -v
 ```
 
-Once it's done, it can be checked out using vmd:
+Okay, so you're going to notice that this is going to take too long to finish. That's why we're not going to wait until it's finished. You can get the output in the shared OneDrive folder provided [here](ONEDRIVELINK).
+
+#### Analysis
+
+What we're going to do now is a bit of analysis of our membrane. The two typical measurements to assess are the **membrane thickness** and the **area per lipid (APL)**. So as to do that, we're going to use [FATSLiM](http://fatslim.github.io/) a package ready to analyze membrane simulations.
+
+Before doing that you can also check how it visually looks like:
 
 ```
 $ vmd system_equi3.gro system_prod.xtc
 ```
-
-#### Analysis
-
-What we're going to do now is a bit of analysis of our membrane. The two typical measurements to assess are the **membrane thickness** and the **area per lipid (APL)**. So as to do that, we're going to use [FATSLIM](http://fatslim.github.io/) a package ready to analyze membrane simulations.
 
 ##### Membrane thickness
 
@@ -154,7 +197,7 @@ Repeat the previous steps to obtain a short simulation of the system.
 
 So, if we compare the membrane thickness and the APL on the previous simulations (*just_popc* and *popc+chl*), we really can't see a significant difference.
 
-Try the analysis again but with longer simulations (100 times longer, i.e. 100 ns), to check for these two quantities. The files can be accessed through... 
+Try the analysis again but with longer simulations (100 times longer, i.e. 100 ns), to check for these two quantities. The files can be accessed [here](ONEDRIVELINK).  
 
 ## Protein-Membrane system
 
@@ -166,7 +209,11 @@ $ cd ../membrane_protein
 
 ### Building the system
 
-In here we're going to create a bilayer for a membrane protein. Run the following command:
+In here we're going to create a bilayer for a membrane protein. Our membrane protein is a refined structure of the Cannabinoid Receptor 2 (CB2). 
+
+![](../theory/misc/pdbcb2.png)
+
+Run the following command:
 
 ```
 $ packmol-memgen --pdb protein.pdb --lipids POPC:CHL1 --ratio 10:1 \
@@ -181,24 +228,29 @@ Check the output .PDB with vmd:
 $ vmd bilayer_protein.pdb
 ```
 
-We're not gonna go over again the steps we followed before because it's probably gonna take a long while. So we're going to go straight to the analysis part. 
+We're not gonna go over again the steps we followed before because it's probably gonna take even longer than the previous parts. So we're going to go straight to the analysis part. 
 
 ### Analysis
 
-In this link a 100 ns trajectory of a system (similar) to the one you've created. That is a CB2 receptor embedded in a 10:1 POPC:CHL membrane, with 0.15 M NaCl. We're going to proceed now to the analysis of some variables concerning the membrane protein.
+In this [link](ONEDRIVELINK) a 100 ns trajectory of a system (similar) to the one you've created. That is a CB2 receptor embedded in a 10:1 POPC:CHL membrane, with 0.15 M NaCl. We're going to proceed now to the analysis of some variables concerning the membrane protein.
 
 #### RMSD
 
 We're gonna first measure the RMSD of the C-alpha atoms of our receptor along the trajectory. This can be done with GROMACS:
 
 ```
-$ gmx rms ..
+$ gmx rms -s _.gro -f _.xtc -o rsmd.xvg
 ```
 
-...
+Select the "C-alpha" group twice (type "3", press Enter, and type "3" again). GROMACS will automatically align all the coordinates and calculate the RMSD for the C-alpha atoms of our protein.
+
+You can again plot it with the python script.
 
 #### RMSF
 
+Now we're going to...
+
 #### Secondary Structure analysis
 
+Finally...
 
