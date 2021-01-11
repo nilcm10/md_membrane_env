@@ -36,7 +36,7 @@ In this part, we're going to obtain the amber ff parameters (version 14SB) for t
 ```
 $ cp ../files/leap.in .
 $ tleap -f leap.in
-$ acpype.py -x system.inpcrd -p system.prmtop -o gmx -r
+$ acpype -x system.inpcrd -p system.prmtop -o gmx -r
 ```
 
 With `leap` we process the system (from the output pdb file) and obtain the parameters for [AMBER](http://ambermd.org/) (.PRMTOP and .INPCRD). However, we're simulating it with [GROMACS](https://manual.gromacs.org/), so we need to transform them to a .TOP and .GRO files, by means of `acpype.py`.
@@ -145,7 +145,7 @@ $ gmx grompp -f mdp/prod.mdp -r system_equi3.gro -c system_equi3.gro -p system_G
 $ gmx mdrun -deffnm system_prod -v
 ```
 
-Okay, so you're going to notice that this is going to take too long to finish. That's why we're not going to wait until it's finished. You can get the output in the shared OneDrive folder provided [here](ONEDRIVELINK).
+Okay, so you're going to notice that this is going to take too long to finish. That's why we're not going to wait until it's finished. You can get the output in the shared OneDrive link provided at the begining of the class.
 
 #### Analysis
 
@@ -188,16 +188,18 @@ $ cd ../popc+chl
 Now we're going to simulate a membrane with a ratio of 1 cholesterol molecule per 3 of POPC. Create the membrane with packmol-memgen to begin with:
 
 ```
-$ packmol-memgen --lipids POPC:CHL --ratio 3:1 --distxy_fix 75
+$ packmol-memgen --lipids POPC:CHL1 --ratio 3:1 --distxy_fix 75
 ```
 
-Repeat the previous steps to obtain a short simulation of the system.
+Check how it looks like again with `vmd`. Spot where the cholesterol molecules are.
+
+In the same OneDrive link provided before there's also a 1 ns simulation of a similar POPC+CHL membrane system. Repeat the previous analysis to measure the membrane thickness and APL.
 
 ### Comparative analysis
 
 So, if we compare the membrane thickness and the APL on the previous simulations (*just_popc* and *popc+chl*), we really can't see a significant difference.
 
-Try the analysis again but with longer simulations (100 times longer, i.e. 100 ns), to check for these two quantities. The files can be accessed [here](ONEDRIVELINK).  
+Try the analysis again but with longer simulations (100 times longer, i.e. 100 ns), to check for these two quantities. The files can be accessed in the OneDrive link.  
 
 ## Protein-Membrane system
 
@@ -211,7 +213,7 @@ $ cd ../membrane_protein
 
 In here we're going to create a bilayer for a membrane protein. Our membrane protein is a refined structure of the Cannabinoid Receptor 2 (CB2). 
 
-![](../theory/misc/pdbcb2.png)
+![](files/images/pdbcb2.png)
 
 Run the following command:
 
@@ -232,14 +234,14 @@ We're not gonna go over again the steps we followed before because it's probably
 
 ### Analysis
 
-In this [link](ONEDRIVELINK) a 100 ns trajectory of a system (similar) to the one you've created. That is a CB2 receptor embedded in a 10:1 POPC:CHL membrane, with 0.15 M NaCl. We're going to proceed now to the analysis of some variables concerning the membrane protein.
+In the same OneDrive link, a 100 ns trajectory of a system (similar) to the one you've created. That is a CB2 receptor embedded in a 10:1 POPC:CHL membrane, with 0.15 M NaCl. We're going to proceed now to the analysis of some variables concerning the membrane protein.
 
 #### RMSD
 
 We're gonna first measure the RMSD of the C-alpha atoms of our receptor along the trajectory. This can be done with GROMACS:
 
 ```
-$ gmx rms -s _.gro -f _.xtc -o rsmd.xvg
+$ gmx rms -f _.xtc -s _.tpr -o rsmd.xvg
 ```
 
 Select the "C-alpha" group twice (type "3", press Enter, and type "3" again). GROMACS will automatically align all the coordinates and calculate the RMSD for the C-alpha atoms of our protein.
@@ -248,9 +250,26 @@ You can again plot it with the python script.
 
 #### RMSF
 
-Now we're going to...
+Now we're going to calculate the RMSF of the structure througout the simulation. This will help us determine how stable are our transmembrane alpha-helices. 
+
+```
+$ gmx rmsf -f _.xtc -s _.tpr -o rmsf.xvg
+```
+
+Select "C-alpha" as well. And again, plot it with whatever you want.
 
 #### Secondary Structure analysis
 
-Finally...
+Finally we're going to perform a simple SS analysis to further assess the stability of the TM helices.
 
+```
+$ gmx do_dssp -f _.xtc -s _.tpr -o ss.xpm -ver 1
+```
+
+Select the "Protein" group. GROMACS will generate a pixelmap (.XPM) that needs to be transformed into an encapsulated PostScript file to be visualized. So execute the following command:
+
+```
+$ gmx xpm2ps -f ss.xpm -o ss.eps
+```
+
+The axis may be difficult to read. On the X-axis there's the time (in ps) of the simulation (from left to right). On the Y-axis there are the protein residues (from bottom to top).
