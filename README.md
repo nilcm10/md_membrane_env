@@ -2,7 +2,7 @@
 
 ![](practical/files/images/box+water.png)
 
-Welcome to the repository for the 11/01/2021 lecture on MD of bilayers and membrane proteins.
+Welcome to the repository for the 12/01/2021 lecture on MD of bilayers and membrane proteins.
 
 ## Distribution
 
@@ -53,12 +53,12 @@ $ pip install fatslim
 $ fatslim self-test
 ```
 
-And the last to install is the AMBER-to-GROMACS converter:
+And last but not least, the AMBER-to-GROMACS converter:
 
 ```
 $ pip install acpype
 ```
 
-GROMACS should be installed. PACKMOL-memgen should be available with the `AmberTools19` suite.
+GROMACS should be installed. PACKMOL-memgen should be available with the AmberTools19 suite.
 
 To start working with the practical part, `git clone` this repo anywhere you want in your local machine and follow the steps of the [protocol](practical/README.md).
