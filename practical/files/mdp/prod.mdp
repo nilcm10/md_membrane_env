@@ -1,7 +1,7 @@
 ;RUN CONTROL
 integrator               = md ; leap-frog integrator
-nsteps                   = 500000 ; steps
-dt                       = 0.002 ; (500000*0.002 ps = 1000 ps)
+nsteps                   = 50000000 ; steps
+dt                       = 0.002 ; (50000000*0.002 ps = 100000 ps = 100 ns)
 comm-grps                = system
 constraints		         = h-bonds
 
@@ -30,7 +30,7 @@ optimize_fft             = yes ; Calculate the optimal FFT plan for the grid at 
 fourierspacing           = 0.15 ; grid spacing for FFT
 
 ;TEMPERATURE COUPLING
-tcoupl                   = Nose-Hoover ; Nose-Hoover thermostat
+tcoupl                   = v-rescale ; modified Berendsen thermostat
 tc_grps                  = Membrane Water ; two coupling groups
 tau_t                    = 0.1 0.1 ; time constant, in ps
 ref_t                    = 300 300 ; reference temperature, one for each group, in K

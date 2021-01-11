@@ -134,18 +134,19 @@ To visualize the file you can either use `xmgrace` or execute the following pyth
 ```
 $ python ../files/plot_xvg.py equi1.xvg
 ```
+
 It outputs a PNG image on the same location where the .XVG file is. See how the different variables change along time until stabilized.
 
 #### Production
 
-Now we're ready to send the calculation. We're going to do a 1 ns long unbiased MD simulation.
+Now we're ready to send the calculation. We're going to do a 100 ns long unbiased MD simulation.
 
 ```
 $ gmx grompp -f mdp/prod.mdp -r system_equi3.gro -c system_equi3.gro -p system_GMX.top -o system_prod.tpr -n index.ndx -maxwarn 1
 $ gmx mdrun -deffnm system_prod -v
 ```
 
-Okay, so you're going to notice that this is going to take too long to finish. That's why we're not going to wait until it's finished. You can get the output in the shared OneDrive link provided at the begining of the class.
+Okay, so you're going to notice that this is going to take too long to finish. That's why we're not going to wait until it's done. You can get the output in the shared OneDrive link provided at the begining of the class.
 
 #### Analysis
 
@@ -172,7 +173,7 @@ The software will give us the thickness per leaflet and for the whole membrane. 
 In this case, we will use:
 
 ```
-$ fatslim apl -c system_equi3.gro -t system_prod.xtc -n index.ndx --plot-thickness thickness.xvg
+$ fatslim apl -c system_equi3.gro -t system_prod.xtc -n index.ndx --plot-apl apl.xvg
 ```
 
 And, just like before, the APL per leaflet, for the whole membrane, and a plot over time is generated.
@@ -193,13 +194,7 @@ $ packmol-memgen --lipids POPC:CHL1 --ratio 3:1 --distxy_fix 75
 
 Check how it looks like again with `vmd`. Spot where the cholesterol molecules are.
 
-In the same OneDrive link provided before there's also a 1 ns simulation of a similar POPC+CHL membrane system. Repeat the previous analysis to measure the membrane thickness and APL.
-
-### Comparative analysis
-
-So, if we compare the membrane thickness and the APL on the previous simulations (*just_popc* and *popc+chl*), we really can't see a significant difference.
-
-Try the analysis again but with longer simulations (100 times longer, i.e. 100 ns), to check for these two quantities. The files can be accessed in the OneDrive link.  
+In the same OneDrive link provided before there's also a 100 ns simulation of a similar POPC+CHL membrane system. Repeat the previous analysis to measure the membrane thickness and APL.
 
 ## Protein-Membrane system
 
@@ -241,7 +236,7 @@ In the same OneDrive link, a 100 ns trajectory of a system (similar) to the one 
 We're gonna first measure the RMSD of the C-alpha atoms of our receptor along the trajectory. This can be done with GROMACS:
 
 ```
-$ gmx rms -f _.xtc -s _.tpr -o rsmd.xvg
+$ gmx rms -f system_prod.xtc -s system_equi3.gro -o rsmd.xvg
 ```
 
 Select the "C-alpha" group twice (type "3", press Enter, and type "3" again). GROMACS will automatically align all the coordinates and calculate the RMSD for the C-alpha atoms of our protein.
@@ -253,7 +248,7 @@ You can again plot it with the python script.
 Now we're going to calculate the RMSF of the structure througout the simulation. This will help us determine how stable are our transmembrane alpha-helices. 
 
 ```
-$ gmx rmsf -f _.xtc -s _.tpr -o rmsf.xvg
+$ gmx rmsf -f system_prod.xtc -s system_equi3.gro -o rmsf.xvg
 ```
 
 Select "C-alpha" as well. And again, plot it with whatever you want.
@@ -263,7 +258,7 @@ Select "C-alpha" as well. And again, plot it with whatever you want.
 Finally we're going to perform a simple SS analysis to further assess the stability of the TM helices.
 
 ```
-$ gmx do_dssp -f _.xtc -s _.tpr -o ss.xpm -ver 1
+$ gmx do_dssp -f system_prod.xtc -s system_equi3.gro -o ss.xpm -ver 1
 ```
 
 Select the "Protein" group. GROMACS will generate a pixelmap (.XPM) that needs to be transformed into an encapsulated PostScript file to be visualized. So execute the following command:
