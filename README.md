@@ -53,10 +53,16 @@ $ pip install fatslim
 $ fatslim self-test
 ```
 
-And last but not least, the AMBER-to-GROMACS converter:
+Then, the AMBER-to-GROMACS converter:
 
 ```
 $ pip install acpype
+```
+
+And finally, the secondary-structure predictor DSSP:
+
+```
+$ sudo apt-get install dssp
 ```
 
 GROMACS should be installed. PACKMOL-memgen should be available with the AmberTools19 suite.

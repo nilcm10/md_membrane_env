@@ -19,6 +19,6 @@ df = df.set_index(0, drop=True)
 df.plot(subplots=True, grid=True, figsize=(10,5))
 fig = plt.gcf()
 
-out = f"{file[:-4]}.png"
+out = "{}.png".format(file[:-4])
 fig.savefig(out, dpi=200)
 

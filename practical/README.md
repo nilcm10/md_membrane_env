@@ -257,8 +257,22 @@ Select "C-alpha" as well. And again, plot it with whatever you want.
 
 Finally we're going to perform a simple SS analysis to further assess the stability of the TM helices.
 
+First of all, point GROMACS to the DSSP executable:
+
 ```
-$ gmx do_dssp -f system_prod.xtc -s system_equi3.gro -o ss.xpm -ver 1
+$ which dssp
+```
+
+`which` will tell you where `dssp` is in your machine. Then, create a global variable called `$DSSP` for GROMACS:
+
+```
+$ export DSSP="path/to/dssp"
+```
+
+And execute the GROMACS command:
+
+``` 
+$ gmx do_dssp -f system_prod.xtc -s system_equi3.gro -o ss.xpm -ver 2
 ```
 
 Select the "Protein" group. GROMACS will generate a pixelmap (.XPM) that needs to be transformed into an encapsulated PostScript file to be visualized. So execute the following command:
