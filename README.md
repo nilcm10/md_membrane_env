@@ -22,9 +22,9 @@ Under [theory/](theory/) you have the theoretical presentation to the topic. Und
 We're gonna be using [miniconda](https://docs.conda.io/en/latest/miniconda.html) to manage the software needed for the protocol to work. So, to download and install it:
 
 ```
-$ wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-$ chmod +x Miniconda3-latest-Linux-x86_64.sh
-$ ./Miniconda3-latest-Linux-x86_64.sh
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+chmod +x Miniconda3-latest-Linux-x86_64.sh
+./Miniconda3-latest-Linux-x86_64.sh
 ```
 
 Follow the instructions.
@@ -34,14 +34,14 @@ Once you have it installed, you probably have to restart your terminal or do `so
 Now we're going to create an environment with all the packages needed and a compatible python version:
 
 ```
-$ conda create -n membranes python=3.5
-$ conda activate membranes
+conda create -n membranes python=3.5
+conda activate membranes
 ```
 
 > Probably gonna ask you to do a `conda init bash`.
 
 ```
-$ conda install numpy pandas matplotlib pytest
+conda install numpy pandas matplotlib pytest
 ```
 
 Say `Y`.
@@ -49,20 +49,20 @@ Say `Y`.
 To install FATSLiM and test if it works:
 
 ```
-$ pip install fatslim
-$ fatslim self-test
+pip install fatslim
+fatslim self-test
 ```
 
 Then, the AMBER-to-GROMACS converter:
 
 ```
-$ pip install acpype
+pip install acpype
 ```
 
 And finally, the secondary-structure predictor DSSP:
 
 ```
-$ sudo apt-get install dssp
+sudo apt-get install dssp
 ```
 
 GROMACS should be installed. PACKMOL-memgen should be available with the AmberTools19 suite.
