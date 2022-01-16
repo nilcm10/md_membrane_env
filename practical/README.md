@@ -36,10 +36,16 @@ In this part, we're going to obtain the amber ff parameters (version 14SB) for t
 ```
 cp ../files/leap.in .
 tleap -f leap.in
-acpype -x system.inpcrd -p system.prmtop -o gmx -r
+acpype -x system.inpcrd -p system.prmtop -o gmx
 ```
 
-With `leap` we process the system (from the output pdb file) and obtain the parameters for [AMBER](http://ambermd.org/) (.PRMTOP and .INPCRD). However, we're simulating it with [GROMACS](https://manual.gromacs.org/), so we need to transform them to a .TOP and .GRO files, by means of `acpype.py`.
+With `leap` we process the system (from the output pdb file) and obtain the parameters for [AMBER](http://ambermd.org/) (.PRMTOP and .INPCRD). However, we're simulating it with [GROMACS](https://manual.gromacs.org/), so we need to transform them to a .TOP and .GRO files, by means of `acpype`.
+
+Because newer versions of `acpype` create an output folder for the files, we need to copy the outputs in our working directory, by doing that:
+
+```
+cp system.amb2pdb/system_GMX* .
+```
 
 #### Preparation
 
@@ -66,7 +72,7 @@ With the first command we generate the mdrun input file (.TPR), and with the sec
 
 We're going to perform a **three step equilibration** of our system ona a NPT ensemble. 
 
-Before doing that, we need to add these three lines before the section (i. e. fractions of text/syntax between in brackets in GROMACS files):
+Before doing that, we need to add these three lines in the `system_GMX.top` before the section (i. e. fractions of text/syntax between in brackets in GROMACS files):
 
 ```
 ...
@@ -137,6 +143,8 @@ python ../files/plot_xvg.py equi1.xvg
 
 It outputs a PNG image on the same location where the .XVG file is. See how the different variables change along time until stabilized.
 
+> You're probably gonna notice the system isn't properly equilibrated (25 ps is not enough). Let's check a properly done equilibration, only the first step. Copy the `system_equi1*` files from the shared OneDrive link provided at the begining of the class, and repeat the visualization and the energetical analysis.
+
 #### Production
 
 Now we're ready to send the calculation. We're going to do a 100 ns long unbiased MD simulation.
@@ -146,7 +154,7 @@ gmx grompp -f mdp/prod.mdp -r system_equi3.gro -c system_equi3.gro -p system_GMX
 gmx mdrun -deffnm system_prod -v
 ```
 
-Okay, so you're going to notice that this is going to take too long to finish. That's why we're not going to wait until it's done. You can get the output in the shared OneDrive link provided at the begining of the class.
+Okay, so you're going to notice that this is going to take too long to finish. That's why we're not going to wait until it's done. You can get the output in the same shared OneDrive link.
 
 #### Analysis
 
@@ -236,7 +244,7 @@ In the same OneDrive link, a 100 ns trajectory of a system (similar) to the one 
 We're gonna first measure the RMSD of the C-alpha atoms of our receptor along the trajectory. This can be done with GROMACS:
 
 ```
-gmx rms -f system_prod.xtc -s system_equi3.gro -o rsmd.xvg
+gmx rms -f system_prod.xtc -s system_equi6.gro -o rmsd.xvg
 ```
 
 Select the "C-alpha" group twice (type "3", press Enter, and type "3" again). GROMACS will automatically align all the coordinates and calculate the RMSD for the C-alpha atoms of our protein.
@@ -248,7 +256,7 @@ You can again plot it with the python script.
 Now we're going to calculate the RMSF of the structure througout the simulation. This will help us determine how stable are our transmembrane alpha-helices. 
 
 ```
-gmx rmsf -f system_prod.xtc -s system_equi3.gro -o rmsf.xvg
+gmx rmsf -f system_prod.xtc -s system_equi6.gro -o rmsf.xvg
 ```
 
 Select "C-alpha" as well. And again, plot it with whatever you want.
@@ -272,7 +280,7 @@ export DSSP="path/to/dssp"
 And execute the GROMACS command:
 
 ``` 
-gmx do_dssp -f system_prod.xtc -s system_equi3.gro -o ss.xpm -ver 2
+gmx do_dssp -f system_prod.xtc -s system_equi6.gro -o ss.xpm -ver 2
 ```
 
 Select the "Protein" group. GROMACS will generate a pixelmap (.XPM) that needs to be transformed into an encapsulated PostScript file to be visualized. So execute the following command:
