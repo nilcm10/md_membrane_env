@@ -143,7 +143,7 @@ python ../files/plot_xvg.py equi1.xvg
 
 It outputs a PNG image on the same location where the .XVG file is. See how the different variables change along time until stabilized.
 
-> You're probably gonna notice the system isn't properly equilibrated (25 ps is not enough). Let's check a properly done equilibration, only the first step. Copy the `system_equi1*` files from the shared OneDrive link provided at the begining of the class, and repeat the visualization and the energetical analysis.
+**You're probably gonna notice the system isn't properly equilibrated (25 ps is not enough). Let's check a properly done equilibration, only the first step. Copy the `system_equi1*` files from the shared OneDrive link provided at the begining of the class, and REPEAT THE VISUALIZATION AND ENERGETICAL ANALYSIS**.
 
 #### Production
 
