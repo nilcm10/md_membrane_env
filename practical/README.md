@@ -113,9 +113,9 @@ And now check the three equilibration files in the `mdp/` folder (`equi*.mdp`). 
 
 Also, check the script we're executing, and figure out what are the `gmx genrestr` and `gmx make_ndx` commands doing.
 
-The whole equilibration will probably take a long while (almost 1 hour).
+The whole equilibration will probably take a long while. **So, we're not gonna wait for all the steps to finish. Kill the process and copy the `just_popc/system_equi1*` files from the shared OneDrive link provided at the begining of the class, and continue with the protocol.**
 
-Once the first equilibration is done (equi1), visualize the time-evolution of the trajectory, with vmd:
+Now, visualize the time-evolution of the trajectory of the first equilibration step (equi1), with vmd:
 
 ```
 vmd system_min.gro system_equi1.xtc
@@ -142,8 +142,6 @@ python ../files/plot_xvg.py equi1.xvg
 ```
 
 It outputs a PNG image on the same location where the .XVG file is. See how the different variables change along time until stabilized.
-
-**You're probably gonna notice the system isn't properly equilibrated (25 ps is not enough). Let's check a properly done equilibration, only the first step. Copy the `system_equi1*` files from the shared OneDrive link provided at the begining of the class, and REPEAT THE VISUALIZATION AND ENERGETICAL ANALYSIS**.
 
 #### Production
 
@@ -277,10 +275,21 @@ which dssp
 export DSSP="path/to/dssp"
 ```
 
+Then, to avoid `Segmentation fault` errors, we will extract only the protein coordinates time-evolution from the trajectory. We will have to do that for both the coordinates and the trajectory, by means of GROMACS' `trjconv` command:
+
+> In both cases you'll have to select "Protein" as the group to extract in the prompt.
+
+```
+gmx trjconv -f system_equi6.gro -s system_equi6.gro -o protein.gro -pbc nojump
+gmx trjconv -f system_prod.xtc -s system_equi6.gro -o protein.xtc -pbc nojump
+```
+
+> `-pbc nojump` option accounts for PBC jumps on the trajectory. The protein may have visited one the periodic images, and so the structure may appear deformed. We want to avoid that.
+
 And execute the GROMACS command:
 
 ``` 
-gmx do_dssp -f system_prod.xtc -s system_equi6.gro -o ss.xpm -ver 2
+gmx do_dssp -f protein.xtc -s protein.gro -o ss.xpm -ver 2
 ```
 
 Select the "Protein" group. GROMACS will generate a pixelmap (.XPM) that needs to be transformed into an encapsulated PostScript file to be visualized. So execute the following command:
