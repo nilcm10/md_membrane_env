@@ -23,7 +23,7 @@ EOF
 gmx grompp -f mdp/equi2.mdp -r system_equi1.gro -c system_equi1.gro -n index.ndx -p system_GMX.top -o system_equi2.tpr -maxwarn 1
 gmx mdrun -deffnm system_equi2 -v
 
-### SECOND EQUILIBRATION STEP
+### THIRD EQUILIBRATION STEP
 gmx genrestr -f system_GMX.gro -n index.ndx -o posre.itp -fc 0 0 0 <<EOF
 headgroups
 EOF
