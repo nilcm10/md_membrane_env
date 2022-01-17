@@ -19,13 +19,21 @@ menu main on
 
 # Background color
 color Display Background white
+color Type C yellow
 
 # User's default values for newly loaded molecules/reps, etc
 mol color Name
 mol delrep 0 top
+mol representation Licorice
+mol selection {noh resname PA PC OL or water}
+mol addrep top
+
+mol color Type
 mol representation VDW
-mol selection {noh}
+mol selection {noh resname CHL}
 mol addrep top
 
 # to smooth trajectory
 mol smoothrep all 0 5
+mol smoothrep all 1 5
+
