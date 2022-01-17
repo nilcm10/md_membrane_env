@@ -113,7 +113,7 @@ And now check the three equilibration files in the `mdp/` folder (`equi*.mdp`). 
 
 Also, check the script we're executing, and figure out what are the `gmx genrestr` and `gmx make_ndx` commands doing.
 
-The whole equilibration will probably take a long while. **So, we're not gonna wait for all the steps to finish. Kill the process and copy the `just_popc/system_equi1*` files from the shared OneDrive link provided at the begining of the class, and continue with the protocol.**
+The whole equilibration will probably take a long while. **So, we're not gonna wait for all the steps to finish. Kill the process and copy the `just_popc/system_equi1*` files from the shared OneDrive link provided at the beginning of the class, and continue with the protocol.**
 
 Now, visualize the time-evolution of the trajectory of the first equilibration step (equi1), with vmd:
 
