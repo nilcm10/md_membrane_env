@@ -1,0 +1,17 @@
+
+&cntrl
+     imin=1, nmropt=1,
+
+     restraintmask='( :1-100000@CA)',
+     ntpr=50, ntr=1, restraint_wt=0.5,
+
+     ntf=1, ntb=0, dielc=1., cut=12.,
+     ntc=1,
+
+     maxcyc=500, ncyc=1000,
+
+ &end
+
+ &wt type='END',   &end
+LISTIN = POUT
+LISTOUT = POUT

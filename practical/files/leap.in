@@ -1,5 +1,5 @@
 source leaprc.protein.ff14SB 
-source leaprc.lipid14 
+source oldff/leaprc.lipid14 
 source leaprc.water.tip3p 
 source leaprc.gaff2 
 set default pbradii mbondi2 

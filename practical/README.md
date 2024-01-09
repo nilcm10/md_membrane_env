@@ -259,7 +259,7 @@ gmx rmsf -f system_prod.xtc -s system_equi6.gro -o rmsf.xvg
 
 Select "C-alpha" as well. And again, plot it with whatever you want.
 
-#### Secondary Structure analysis
+#### Secondary Structure analysis (CHANGE !!!)
 
 Finally we're going to perform a simple SS analysis to further assess the stability of the TM helices.
 
@@ -289,7 +289,7 @@ gmx trjconv -f system_prod.xtc -s system_equi6.gro -o protein.xtc -pbc nojump
 And execute the GROMACS command:
 
 ``` 
-gmx do_dssp -f protein.xtc -s protein.gro -o ss.xpm -ver 2
+gmx dssp -f protein.xtc -s protein.gro -o ss.xpm -ver 2
 ```
 
 Select the "Protein" group. GROMACS will generate a pixelmap (.XPM) that needs to be transformed into an encapsulated PostScript file to be visualized. So execute the following command:
