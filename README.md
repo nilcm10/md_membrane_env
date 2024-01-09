@@ -2,7 +2,7 @@
 
 ![](practical/files/images/box+water.png)
 
-Welcome to the repository for the 18/01/2022 lectures on MD of bilayers and membrane proteins.
+Welcome to the repository for the 11/01/2024 and 16/01/2024 lectures on MD of bilayers and membrane proteins.
 
 ## Distribution
 
@@ -40,7 +40,7 @@ Once you have it installed, you probably have to restart your terminal or do `so
 Now we're going to create an environment and we're going to call it `membranes`:
 
 ```
-conda create -n membranes
+conda create -n membranes python=3.6
 conda activate membranes
 ```
 
@@ -54,7 +54,7 @@ Say `Y`.
 
 ### Installing the rest of the software
 
-We might need to install the molecular dynamics machine as well. First check if it's installed in your system by typing `gmx help` or `which gmx`in your shell. If there's no prompt or the software is not installed, do:
+We might need to install the molecular dynamics machine as well. First check if it's installed in your system by typing `gmx help` or `which gmx` in your shell. If there's no prompt or the software is not installed, do:
 
 ```
 sudo apt install gromacs
@@ -65,12 +65,6 @@ To install FATSLiM and test if it works:
 ```
 pip install fatslim
 fatslim self-test
-```
-
-And finally, the secondary-structure predictor DSSP:
-
-```
-sudo apt-get install dssp
 ```
 
 To start working with the practical part, `git clone` this repo anywhere you want in your local machine and follow the steps of the [protocol](practical/README.md).
