@@ -259,43 +259,28 @@ gmx rmsf -f system_prod.xtc -s system_equi6.gro -o rmsf.xvg
 
 Select "C-alpha" as well. And again, plot it with whatever you want.
 
-#### Secondary Structure analysis (CHANGE !!!)
+#### Secondary Structure analysis
 
-Finally we're going to perform a simple SS analysis to further assess the stability of the TM helices.
-
-First of all, point GROMACS to the DSSP executable:
+Finally we're going to perform a simple secondary structure analysis to further assess the stability of the TM helices.
 
 ```
-which dssp
+gmx dssp -f system_prod.xtc -s system_equi6.gro -o dssp.dat
 ```
 
-`which` will tell you where `dssp` is in your machine. Then, create a global variable called `$DSSP` for GROMACS:
+Technically it should know, based on the `index.ndx`, what the atoms of the Protein are. The output `dssp.dat` contains the secondary structure prediction per residue (each character) per frame (each line). Each letter stand for:
+- H = α-helix
+- B = residue in isolated β-bridge
+- E = extended strand, participates in β ladder
+- G = 3-helix (310 helix)
+- I = 5 helix (π-helix)
+- T = hydrogen bonded turn
+- S = bend
+- ~ = unknown
+
+You can try to plot it yourselves (this won't work with XMGRACE), or use this trashy script:
 
 ```
-export DSSP="path/to/dssp"
+python ../files/plot_dssp.py dssp.dat
 ```
 
-Then, to avoid `Segmentation fault` errors, we will extract only the protein coordinates time-evolution from the trajectory. We will have to do that for both the coordinates and the trajectory, by means of GROMACS' `trjconv` command:
-
-> In both cases you'll have to select "Protein" as the group to extract in the prompt.
-
-```
-gmx trjconv -f system_equi6.gro -s system_equi6.gro -o protein.gro -pbc nojump
-gmx trjconv -f system_prod.xtc -s system_equi6.gro -o protein.xtc -pbc nojump
-```
-
-> `-pbc nojump` option accounts for PBC jumps on the trajectory. The protein may have visited one the periodic images, and so the structure may appear deformed. We want to avoid that.
-
-And execute the GROMACS command:
-
-``` 
-gmx dssp -f protein.xtc -s protein.gro -o ss.xpm -ver 2
-```
-
-Select the "Protein" group. GROMACS will generate a pixelmap (.XPM) that needs to be transformed into an encapsulated PostScript file to be visualized. So execute the following command:
-
-```
-gmx xpm2ps -f ss.xpm -o ss.eps
-```
-
-The axis may be difficult to read. On the X-axis there's the time (in ps) of the simulation (from left to right). On the Y-axis there are the protein residues (from bottom to top).
+This will return a `dssp.png` with a heatmap, where each color represents a letter (secondary structure), the sequence in the X-axis and each frame in the Y-axis.

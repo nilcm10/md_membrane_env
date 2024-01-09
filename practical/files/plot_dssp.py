@@ -14,6 +14,7 @@ with open(file, "r") as f:
 df = pd.DataFrame(rows)
 
 letters = list(set(df.values.flatten()))
+letters.sort()
 values = [float(x) for x in range(len(letters))]
 letter2value = dict(zip(letters, values))
 for i in range(len(df)):
