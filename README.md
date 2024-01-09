@@ -2,7 +2,7 @@
 
 ![](practical/files/images/box+water.png)
 
-Welcome to the repository for the 18/01/2022 lecture on MD of bilayers and membrane proteins.
+Welcome to the repository for the 18/01/2022 lectures on MD of bilayers and membrane proteins.
 
 ## Distribution
 
@@ -47,14 +47,14 @@ conda activate membranes
 And install all the packages needed through `conda install`:
 
 ```
-conda install numpy pandas matplotlib pytest ambertools acpype
+conda install -c conda-forge numpy pandas matplotlib ambertools acpype lipyphilic
 ```
 
 Say `Y`.
 
 ### Installing the rest of the software
 
-We need to install the molecular dynamics machine as well. It can be installed through:
+We might need to install the molecular dynamics machine as well. First check if it's installed in your system by typing `gmx help` or `which gmx`in your shell. If there's no prompt or the software is not installed, do:
 
 ```
 sudo apt install gromacs
