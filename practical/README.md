@@ -166,10 +166,21 @@ vmd system_equi3.gro system_prod.xtc
 
 ##### Membrane thickness
 
+Before using `fatslim`, we need to define an entry in the index called `headgroups`, indicating the phosphate groups of the lipids. Thus, we need to generate an index with GROMACS first:
+
+```
+gmx make_ndx -f system_equi3.gro -o fatslim.ndx<<EOF
+a P31
+name 8 headgroups
+EOF
+```
+
+This will create an index for fatslim with the atom IDs of the phosphate groups in the POPC molecules. 
+
 To determine membrane thickness the command to be used:
 
 ```
-fatslim thickness -c system_equi3.gro -t system_prod.xtc -n index.ndx --plot-thickness thickness.xvg
+fatslim thickness -c system_equi3.gro -t system_prod.xtc -n fatslim.ndx --plot-thickness thickness.xvg
 ```
 
 The software will give us the thickness per leaflet and for the whole membrane. Moreover, with the option `--plot-thickness` we can obtain a plot of the thickness over time. You can again use `xmgrace` or `plot_xvg.py` to visualize the plot.
@@ -179,7 +190,7 @@ The software will give us the thickness per leaflet and for the whole membrane. 
 In this case, we will use:
 
 ```
-fatslim apl -c system_equi3.gro -t system_prod.xtc -n index.ndx --plot-apl apl.xvg
+fatslim apl -c system_equi3.gro -t system_prod.xtc -n fatslim.ndx --plot-apl apl.xvg
 ```
 
 And, just like before, the APL per leaflet, for the whole membrane, and a plot over time is generated.

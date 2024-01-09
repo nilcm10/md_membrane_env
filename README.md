@@ -47,7 +47,7 @@ conda activate membranes
 And install all the packages needed through `conda install`:
 
 ```
-conda install -c conda-forge numpy pandas matplotlib pytest (ambertools)
+conda install -c conda-forge numpy pandas matplotlib pytest ambertools
 ```
 
 Say `Y`.
