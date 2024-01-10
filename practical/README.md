@@ -31,20 +31,22 @@ vmd bilayer_only.pdb
 
 #### Transformation to GROMACS
 
-In this part, we're going to obtain the amber ff parameters (version 14SB) for the system:
+In this part, we're going to obtain the amber ff parameters (version 14SB) for the system.
+
+> However, the recent versions of PACKMOL-memgen tend to have some errors in the structure that crush when using GROMACS. So, we're going to do a small minimization of the system with `sander`to correct for that.
 
 ```
-cp ../files/leap.in .
+cp ../files/leap.in ../files/system.sander .
 tleap -f leap.in
-acpype -x system.inpcrd -p system.prmtop -o gmx
+sander -O -i system.sander -o system.sanderout -p system.prmtop -c system.inpcrd -r system.rst -ref system.inpcrd
 ```
 
-With `leap` we process the system (from the output pdb file) and obtain the parameters for [AMBER](http://ambermd.org/) (.PRMTOP and .INPCRD). However, we're simulating it with [GROMACS](https://manual.gromacs.org/), so we need to transform them to a .TOP and .GRO files, by means of `acpype`.
+With `leap` we process the system (from the output pdb file) and obtain the parameters for [AMBER](http://ambermd.org/) (.PRMTOP and .INPCRD). `sander` will take some time, you can check the progress in the `system.sanderout` file.
 
-Because newer versions of `acpype` create an output folder for the files, we need to copy the outputs in our working directory, by doing that:
+However, we're simulating it with [GROMACS](https://manual.gromacs.org/), so we need to transform them to a .TOP and .GRO files, by means of `amb2gro_top_gro.py`. We can also output the minimization end coordinates, with the option `-b` in the command.
 
 ```
-cp system.amb2pdb/system_GMX* .
+amb2gro_top_gro.py -p system.prmtop -c system.rst -t system_GMX.top -g system_GMX.gro -b system_out.pdb
 ```
 
 #### Preparation
@@ -57,7 +59,7 @@ cp -r ../files/mdp .
 
 ##### Energy minimization
 
-Once we have the necessary files for a simulation with GROMACS, we're going to continue with a short minimization (1000 steps). Open the file `mdp/min.mdp` to check what we're doing first.
+Once we have the necessary files for a simulation with GROMACS, we're going to continue with a short minimization (1000 steps), now in GROMACS (just to make sure). Open the file `mdp/min.mdp` to check what we're doing first.
 
 Then, execute these two commands:
 
