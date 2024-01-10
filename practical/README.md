@@ -33,7 +33,7 @@ vmd bilayer_only.pdb
 
 In this part, we're going to obtain the amber ff parameters (version 14SB) for the system.
 
-> However, the recent versions of PACKMOL-memgen tend to have some errors in the structure that crush when using GROMACS. So, we're going to do a small minimization of the system with `sander`to correct for that.
+> However, the recent versions of PACKMOL-memgen tend to have some errors in the structure that crush when using GROMACS. So, we're going to do a small minimization of the system with `sander` to correct for that.
 
 ```
 cp ../files/leap.in ../files/system.sander .
@@ -213,7 +213,7 @@ packmol-memgen --lipids POPC:CHL1 --ratio 3:1 --distxy_fix 75
 
 Check how it looks like again with `vmd`. Spot where the cholesterol molecules are.
 
-In the same OneDrive link provided before there's also a 100 ns simulation of a similar POPC+CHL membrane system. Repeat the previous analysis to measure the membrane thickness and APL.
+In the same OneDrive link provided before there's also a 100 ns simulation of a similar POPC+CHL membrane system. Repeat the previous analysis to measure the membrane thickness and APL, and compare those to the POPC-only membrane.
 
 ## Protein-Membrane system
 
