@@ -174,6 +174,7 @@ Before using `fatslim`, we need to define an entry in the index called `headgrou
 gmx make_ndx -f system_equi3.gro -o fatslim.ndx<<EOF
 a P31
 name 8 headgroups
+q
 EOF
 ```
 
